@@ -73,11 +73,20 @@ string valid_input_filename(string& filename, string& doc_root, map<string,strin
 			sub_alias = alias.first.substr(1,alias.first.length()-2);
 			if (dirs[i] == sub_alias) {
 				cout<<"Substitute: "<<dirs[i]<<" for "<<alias.second<<"\n";
+	
+				vector<string> new_origin;
+			
+				boost::split(new_origin, alias.second, boost::is_any_of("/"), boost::token_compress_on);	
+				dirs.erase(dirs.begin(), dirs.begin() + (i+1));
+				dirs.insert(dirs.begin(), new_origin.begin(), new_origin.end());
 				origin = alias.second;
+				i=0;
+				break;
 			} 
 		}
 		if (dirs[i] == ".." && i>0) {
 			dirs.erase(dirs.begin() + (i-1), dirs.begin() + (i+1));
+			i=i-2;
 		}
 	
 	}
