@@ -55,6 +55,9 @@ int main(int argc, char*argv[]) {
 }
 
 string valid_input_filename(string& filename, string& doc_root, map<string,string>& aliases) {
+	string origin;
+	origin = doc_root;
+	
 	string real_filepath;
 	
 	real_filepath = doc_root + "/" + filename;
@@ -70,12 +73,33 @@ string valid_input_filename(string& filename, string& doc_root, map<string,strin
 			sub_alias = alias.first.substr(1,alias.first.length()-2);
 			if (dirs[i] == sub_alias) {
 				cout<<"Substitute: "<<dirs[i]<<" for "<<alias.second<<"\n";
+				origin = alias.second;
 			} 
+		}
+		if (dirs[i] == ".." && i>0) {
+			dirs.erase(dirs.begin() + (i-1), dirs.begin() + (i+1));
 		}
 	
 	}
 
-	return real_filepath;
+	stringstream ss;
+	for(size_t i = 0; i < dirs.size(); ++i)	{
+	  if(i != 0)
+	    ss << "/";
+	  ss << dirs[i];
+	}
+	
+	real_filepath = ss.str();
+
+	
+	
+	if (real_filepath.substr(0, origin.length()) == origin) {
+		cout<<"Real filepath: "<<real_filepath<<"\n";
+		return real_filepath;
+	} else {
+		return "Invalid";
+	}
+	
 }
 
 int copy_files(string& doc_root, string& output_area, map<string,string>&aliases) {
@@ -96,26 +120,29 @@ int copy_files(string& doc_root, string& output_area, map<string,string>&aliases
 		string input_filename;
 		input_filename = valid_input_filename(tokens[0], doc_root, aliases);
 
-
-
-		// Open input and output file
-		ifstream input_file;	
-		input_file.open(tokens[0]);
-		if (input_file.fail()){
-			cout<<"file not found\n";
-		}
-
-		ofstream output_file;
-		output_file.open(tokens[1]);
-	
-		if (input_file.is_open() && output_file.is_open() ) {
+		if (input_filename == "Invalid") {
+			cout<<"File path not under Document Root\n";
+		} else {
 			
-			string line;			
-	
-			while ( getline( input_file, line) ) {
+			// Open input and output file
+			ifstream input_file;	
+			input_file.open(tokens[0]);
+			if (input_file.fail()){
+				cout<<"file not found\n";
+			}
+
+			ofstream output_file;
+			output_file.open(tokens[1]);
+		
+			if (input_file.is_open() && output_file.is_open() ) {
+				
+				string line;			
+		
+				while ( getline( input_file, line) ) {
 				
 				output_file<<line<<"\n";				
 
+				}
 			}
 		}			
 	}
