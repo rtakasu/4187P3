@@ -138,19 +138,37 @@ int copy_files(string& doc_root, string& output_area, map<string,string>&aliases
 				cout<<"file not found\n";
 			}
 
-			ofstream output_file;
-			output_file.open(tokens[1]);
 		
-			if (input_file.is_open() && output_file.is_open() ) {
+
+//			ofstream output_file;
+//			output_file.open(tokens[1]);
+	
+			string in_file_string;
+
+			in_file_string = "";
+	
+			if (input_file.is_open() ) {
 				
 				string line;			
 		
 				while ( getline( input_file, line) ) {
-				
-				output_file<<line<<"\n";				
+					in_file_string = in_file_string + line + "\n";	
+					
+					
+
+			
+					//output_file<<line<<"\n";				
 
 				}
 			}
+			string command;	
+			command = "./copyfile " + tokens[1] + " '" + in_file_string+ "'";			
+			system(command.c_str());
+			//cout<<in_file_string;
+	
+			//command = "chroot /";
+			//system(command.c_str());
+
 		}			
 	}
 
