@@ -89,9 +89,7 @@ string valid_input_filename(string& filename, string& doc_root, map<string,strin
 	  ss << dirs[i];
 	}
 	
-	real_filepath = ss.str();
-
-	
+	real_filepath = ss.str();	
 	
 	if (real_filepath.substr(0, origin.length()) == origin) {
 		cout<<"Real filepath: "<<real_filepath<<"\n";
