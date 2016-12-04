@@ -1,4 +1,3 @@
 DocumentRoot /home/rgt2108/4187P3/input
 OutputArea /home/rgt2108/4187P3/output
-Alias /name/ directory-name
-Alias /n/ /etc
+Alias /foo/ /etc
