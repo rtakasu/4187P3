@@ -111,7 +111,10 @@ string valid_input_filename(string& filename, string& doc_root, map<string,strin
 
 int copy_files(string& doc_root, string& output_area, map<string,string>&aliases) {
 
-	while(1) {		
+	//prepare_output_area(output_area);
+	
+	while(1) {	
+			
 		char user_input[100];	
 
 		// Get file names		
@@ -137,11 +140,6 @@ int copy_files(string& doc_root, string& output_area, map<string,string>&aliases
 			if (input_file.fail()){
 				cout<<"file not found\n";
 			}
-
-		
-
-//			ofstream output_file;
-//			output_file.open(tokens[1]);
 	
 			string in_file_string;
 
@@ -154,16 +152,13 @@ int copy_files(string& doc_root, string& output_area, map<string,string>&aliases
 				while ( getline( input_file, line) ) {
 					in_file_string = in_file_string + line + "\n";	
 					
-					
-
-			
-					//output_file<<line<<"\n";				
-
 				}
 			}
+			prepare_output_area(output_area);
 			string command;	
-			command = "./copyfile " + tokens[1] + " '" + in_file_string+ "'";			
+			command = "chroot " + output_area + " /copyfile " + tokens[1] + " '" + in_file_string+ "'";			
 			system(command.c_str());
+			clean_output_area(output_area);
 			//cout<<in_file_string;
 	
 			//command = "chroot /";
@@ -171,8 +166,22 @@ int copy_files(string& doc_root, string& output_area, map<string,string>&aliases
 
 		}			
 	}
+}
 
+int prepare_output_area(string& output_area) {
+
+	string command;
+	command = "cp ./copyfile " + output_area + ";cd " + output_area + "; mkdir -p bin usr lib lib64; mount --bind /bin ./bin; mount --bind /lib ./lib; mount --bind /lib64 ./lib64; mount --bind /usr ./usr;"; 
+	system(command.c_str());	
 
 }
 
+int clean_output_area(string& output_area) {
+	
+	string command;
+	command = "cd " + output_area + "; umount ./bin ./lib ./lib64 ./usr; rm ./copyfile; rm -rf ./bin ./lib ./lib64 ./usr;"; 
+	system(command.c_str());	
+	
+	return 0;
+}
 

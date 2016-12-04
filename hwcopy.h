@@ -21,4 +21,8 @@ int copy_files(string& doc_root, string& output_area, map<string,string>& aliase
 
 string valid_input_filename(string& filename, string& doc_root, map<string,string>& aliases);
 
+int prepare_output_area(string& output_area);
+
+int clean_output_area(string& output_area);
+
 #endif
